@@ -4,16 +4,70 @@
 #include <cstdlib>
 #include <assert.h>
 
-using namespace std;
+using std::cout;
+using std::cerr;
+using std::endl;
 
 typedef struct {
    int x, y;
 } coord;
 
-static vector< vector<coord> > solutions;
+class vector {
+   private:
+
+      size_t _cap;
+      size_t _size;
+      int *elems;
+
+   public:
+
+      void add(const int x) {
+         if(_size == _cap) {
+            int *oldelems(elems);
+
+            _cap++;
+            elems = (int*)malloc(_cap * sizeof(int));
+            memcpy(elems, oldelems, sizeof(int)*_size);
+
+            free(oldelems);
+         }
+
+         elems[_size++] = x;
+      }
+
+      size_t size() const { return _size; }
+
+      int operator[](const size_t i) const {
+         return elems[i];
+      }
+
+      int& operator[](const size_t i) {
+         int& x(elems[i]);
+         return x;
+      }
+
+      vector() {
+         _cap = 1;
+         _size = 0;
+         elems = (int*)malloc(sizeof(int)*_cap);
+      }
+
+      vector(const vector& copy) {
+         _cap = copy._cap;
+         _size = copy._size;
+         elems = (int*)malloc(sizeof(int) * _cap);
+         memcpy(elems, copy.elems, sizeof(int)*_cap);
+      }
+
+      ~vector() {
+         free(elems);
+      }
+};
+
+static std::vector< vector > solutions;
 
 static bool
-can_place(const vector<int> cols, int row, int new_col, const size_t size)
+can_place(const vector cols, int row, int new_col, const size_t size)
 {
    // try to find queen in the same column
    for(size_t i(0); i < cols.size(); ++i) {
@@ -39,15 +93,13 @@ can_place(const vector<int> cols, int row, int new_col, const size_t size)
 }
 
 static size_t
-do_queens(vector<int> cols, int row, size_t size)
+do_queens(vector cols, int row, size_t size)
 {
    if(row == size) {
-      vector<coord> v;
+      vector v;
       for(size_t i(0); i < cols.size(); ++i) {
-         coord a;
-         a.x = i;
-         a.y = cols[i];
-         v.push_back(a);
+         v.add(i);
+         v.add(cols[i]);
       }
       solutions.push_back(v);
 #if 0
@@ -63,10 +115,10 @@ do_queens(vector<int> cols, int row, size_t size)
    size_t total = 0;
    for(size_t col(0); col < size; ++col) {
       if(can_place(cols, row, col, size)) {
-         vector<int> new_state;
+         vector new_state;
          for(size_t i(0); i < cols.size(); ++i)
-            new_state.push_back(cols[i]);
-         new_state.push_back(col);
+            new_state.add(cols[i]);
+         new_state.add(col);
          total += do_queens(new_state, row + 1, size);
       }
    }
@@ -76,7 +128,7 @@ do_queens(vector<int> cols, int row, size_t size)
 static size_t
 compute_queens(size_t size)
 {
-   vector<int> columns_used;
+   vector columns_used;
 
    return do_queens(columns_used, 0, size);
 }
