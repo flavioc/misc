@@ -13,7 +13,7 @@
 //#define USE_SPLASH 1
 //#define OUTPUT_DATA 1
 #define USE_STRUCTS 1
-#define GRID_SIZE 400
+static size_t GRID_SIZE(10);
 //#define OUTPUT_IMAGES 1
 //#define OUTPUT_RESULTS 1
 
@@ -1094,16 +1094,22 @@ int main(int argc, char** argv)
     return 0;
 #endif
     
+    if(argc == 2) {
+       GRID_SIZE = (size_t)atoi(argv[1]);
+    }
+    cout << "Create image " << GRID_SIZE << "x" << GRID_SIZE << "\n";
     set_size(GRID_SIZE, GRID_SIZE);
     paint_sunset(5);
 #ifdef OUTPUT_IMAGES
     save_image("original.pgm");
 #endif
+    cout << "Corrupt image.\n";
     corrupt_image(sigma);
 #ifdef OUTPUT_IMAGES
     save_image("corrupted.pgm");
 #endif
     
+    cout << "Construct graph.\n";
     construct_graph();
     
     assert(colors > 0);
@@ -1121,6 +1127,7 @@ int main(int argc, char** argv)
     add_all_tasks_to_fifo(100.0);
     init_engine();
     
+    cout << "Running engine.\n";
     run_engine();
     
     cout << "Run everything with " << update_count << " updates" << endl;
