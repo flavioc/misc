@@ -227,7 +227,7 @@ main(int argc, char **argv)
 
    for(auto np : nodes) {
       size_t dest(np.first);
-      if((dest + 2) % fraction != 0)
+      if(dest % fraction != 0)
          continue;
 
       heap.clear();
