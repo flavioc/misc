@@ -31,7 +31,7 @@ struct node {
 	node_t id;
 	list<edge*> back_edges;
    struct node *current_target;
-   unordered_map<struct node*, size_t> distances;
+   map<struct node*, size_t> distances;
 	size_t position;
 	color_t color;
    size_t get_prio()
@@ -227,7 +227,7 @@ main(int argc, char **argv)
 
    for(auto np : nodes) {
       size_t dest(np.first);
-      if((dest + 2) % fraction != 0)
+      if(dest % fraction != 0)
          continue;
 
       heap.clear();
@@ -264,9 +264,10 @@ main(int argc, char **argv)
                new_d = ud->second + w;
             auto vd(v->distances.find(d));
             size_t vdis;
-            if(vd == v->distances.end())
+            if(vd == v->distances.end()) {
                vdis = INFINITE_DISTANCE;
-            else
+               v->distances[d] = vdis;
+            } else
                vdis = vd->second;
 
             if(new_d < vdis) {
