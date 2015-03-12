@@ -37,7 +37,7 @@ allfilled(const vector<int> board, int player, int *points)
 static bool
 checkwin(const vector<int> board, int player)
 {
-   for(vector<int> v : valid) {
+   for(const vector<int> v : valid) {
       bool found(true);
       for(int i : v) {
          if(board[i] != player) {

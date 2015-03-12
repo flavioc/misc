@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <cstdlib>
+#include <cstring>
 #include <assert.h>
 
 using std::cout;
@@ -25,7 +26,7 @@ class vector {
          if(_size == _cap) {
             int *oldelems(elems);
 
-            _cap++;
+            _cap *= 2;
             elems = (int*)malloc(_cap * sizeof(int));
             memcpy(elems, oldelems, sizeof(int)*_size);
 
