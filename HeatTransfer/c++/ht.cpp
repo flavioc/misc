@@ -19,8 +19,7 @@ class node {
       uint32_t id;
       double heat{0.0};
       size_t inbound{0};
-      std::list<uint32_t> neighbors;
-      std::list<node*> links;
+      std::map<uint32_t, node*> neighbors;
       bool in_queue{true};
 
       explicit node(const uint32_t _id): id(_id) {}
@@ -35,19 +34,15 @@ update_heat(node *n, queue<node*>& q)
    double i((double)(n->inbound + 1));
    double oldheat(n->heat);
    double sum{0.0};
-#if 1
-   for(node * neighbor : n->links)
-      sum += neighbor->heat;
-#else
-   for(uint32_t p : n->neighbors) {
-      node *neighbor(nodes[p]);
+   for(auto p : n->neighbors) {
+      node *neighbor(p.second);
       sum += neighbor->heat;
    }
-#endif
    double new_heat((oldheat + sum)/i);
    n->heat = new_heat;
    if((new_heat - oldheat >= 0.0 ? new_heat - oldheat : oldheat - new_heat) >= delta) {
-      for(node * neighbor : n->links) {
+      for(auto p : n->neighbors) {
+         node *neighbor(p.second);
          if(!neighbor->in_queue) {
             neighbor->in_queue = true;
             q.push(neighbor);
@@ -96,21 +91,21 @@ main(int argc, char **argv)
       n->heat = heat;
       for(size_t i(0); i < total; ++i) {
          fp.read((char *)&dst, sizeof(uint32_t));
-         n->neighbors.push_back(dst);
+         n->neighbors[dst] = nullptr;
+         n->inbound++;
       }
       nodes[node] = n;
    }
    cout << "Read " << nodes.size() << " nodes\n";
 
+   // fix nodes
    for(auto p : nodes) {
       node *n(p.second);
-      for(uint32_t l : n->neighbors) {
-         auto x(nodes.find(l));
+      for(auto& p : n->neighbors) {
+         auto x(nodes.find(p.first));
          node *o(x->second);
-         n->links.push_back(o);
-         o->inbound++;
+         p.second = o;
       }
-//      n->neighbors.clear();
    }
 
    queue<node*> q;

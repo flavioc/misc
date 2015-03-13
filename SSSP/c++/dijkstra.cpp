@@ -31,7 +31,7 @@ struct node {
 	node_t id;
 	list<edge*> back_edges;
    struct node *current_target;
-   map<struct node*, size_t> distances;
+   unordered_map<struct node*, size_t> distances;
 	size_t position;
 	color_t color;
    size_t get_prio()
@@ -231,6 +231,7 @@ main(int argc, char **argv)
          continue;
 
       heap.clear();
+      heap.reserve(0);
       node *d(nodes[dest]);
 
       for(auto np2 : nodes) {

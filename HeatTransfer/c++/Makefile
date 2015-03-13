@@ -1,5 +1,5 @@
 
-CXXFLAGS = -std=c++11
+CXXFLAGS = -std=c++11 -O3
 CC = g++
 
 all: compile_heat ht

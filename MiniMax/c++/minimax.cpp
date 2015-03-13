@@ -1,12 +1,13 @@
 
 #include <vector>
+#include <list>
 #include <iostream>
 
 using namespace std;
 
 static int total(0);
 static bool DEBUG(false);
-static vector< vector<int>> valid = {{0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 4, 8}, {2, 4, 6}};
+static list< list<int>> valid = {{0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 4, 8}, {2, 4, 6}};
 
 typedef struct {
    int score;
@@ -24,10 +25,10 @@ static bool
 allfilled(const vector<int> board, int player, int *points)
 {
    int count(0);
-   for(size_t i(0); i < board.size(); ++i) {
-      if(board[i] == 0)
+   for(int x : board) {
+      if(x == 0)
          return false;
-      if(board[i] == player)
+      if(x == player)
          count++;
    }
    *points = count;
@@ -37,7 +38,7 @@ allfilled(const vector<int> board, int player, int *points)
 static bool
 checkwin(const vector<int> board, int player)
 {
-   for(const vector<int> v : valid) {
+   for(auto& v : valid) {
       bool found(true);
       for(int i : v) {
          if(board[i] != player) {
