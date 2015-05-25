@@ -9,7 +9,6 @@
 #include <fstream>
 #include <stdint.h>
 #include <math.h>
-#include <queue>
 
 using namespace std;
 
@@ -20,7 +19,6 @@ class node {
       double heat{0.0};
       size_t inbound{0};
       std::map<uint32_t, node*> neighbors;
-      bool in_queue{true};
 
       explicit node(const uint32_t _id): id(_id) {}
 };
@@ -28,8 +26,8 @@ class node {
 static map<uint32_t, node*> nodes;
 static double delta;
 
-static void
-update_heat(node *n, queue<node*>& q)
+static bool
+update_heat(node *n)
 {
    double i((double)(n->inbound + 1));
    double oldheat(n->heat);
@@ -40,27 +38,21 @@ update_heat(node *n, queue<node*>& q)
    }
    double new_heat((oldheat + sum)/i);
    n->heat = new_heat;
-   if((new_heat - oldheat >= 0.0 ? new_heat - oldheat : oldheat - new_heat) >= delta) {
-      for(auto p : n->neighbors) {
-         node *neighbor(p.second);
-         if(!neighbor->in_queue) {
-            neighbor->in_queue = true;
-            q.push(neighbor);
-         }
-      }
-   }
+   return (new_heat - oldheat >= 0.0 ? new_heat - oldheat : oldheat - new_heat) >= delta;
 }
 
 static void
-process_nodes(queue<node*>& q)
+process_nodes()
 {
    uint64_t updates{0};
-   while(!q.empty()) {
-      node *n(q.front());
-      q.pop();
-      update_heat(n, q);
-      n->in_queue = false;
-      updates++;
+   bool cont{true};
+   while(cont) {
+      cont = false;
+      for(auto p : nodes) {
+         auto n = p.second;
+         cont |= update_heat(n);
+         updates++;
+      }
    }
    cout << updates << " updates\n";
 }
@@ -108,11 +100,5 @@ main(int argc, char **argv)
       }
    }
 
-   queue<node*> q;
-   for(auto p : nodes) {
-      node *n(p.second);
-      q.push(n);
-   }
-
-   process_nodes(q);
+   process_nodes();
 }
