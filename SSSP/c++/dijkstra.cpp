@@ -14,7 +14,9 @@
 
 using namespace std;
 
-#define INFINITE_DISTANCE 999999
+typedef double distance_t;
+
+#define INFINITE_DISTANCE 999999.0
 
 typedef enum {
 	WHITE,
@@ -24,17 +26,17 @@ typedef enum {
 
 struct edge {
    struct node *target;
-   int weight;
+   distance_t weight;
 };
 
 struct node {
 	node_t id;
 	list<edge*> back_edges;
    struct node *current_target;
-   unordered_map<struct node*, size_t> distances;
+   unordered_map<struct node*, distance_t> distances;
 	size_t position;
 	color_t color;
-   size_t get_prio()
+   distance_t get_prio()
    {
       auto it(distances.find(current_target));
       if(it == distances.end())
@@ -186,7 +188,7 @@ add_connection(node_t src, node_t dst, int weight)
 	assert(srcp != NULL && dstp != NULL);
    edge *ed(new edge);
    ed->target = srcp;
-   ed->weight = weight;
+   ed->weight = (distance_t)weight;
 	dstp->back_edges.push_back(ed);
 }
 
