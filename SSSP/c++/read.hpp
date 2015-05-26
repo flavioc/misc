@@ -11,6 +11,7 @@ typedef std::vector<fact_argument> fact_arguments;
 
 typedef void (*read_handle_function)(fact_arguments);
 
+std::vector<std::string> split(const std::string&, const std::string&);
 void read_file(const std::string&);
 void add_read_handler(const std::string&, read_handle_function);
 node_t read_node(const fact_argument&);

@@ -1,0 +1,5 @@
+How to convert snap files to be readable by read_txt_graph:
+
+cd cl-meld
+(load "load")
+(cl-meld:snap-stanford-dump "/home/flavioc/meld/benchs/progs/data/shortest-email.txt" "/home/flavioc/misc/SSSP/c++/email.txt")

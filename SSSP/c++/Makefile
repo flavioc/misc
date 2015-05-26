@@ -22,15 +22,19 @@ COMPILE = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJS)
 
 OBJS = read.o \
 		 dijkstra.o	\
-		 compile_graph.o
+		 compile_graph.o \
+		 read_txt_graph.o
 
-all: compile_graph dijkstra
+all: compile_graph dijkstra read_txt_graph
 
 dijkstra: read.o dijkstra.o
 	$(CXX) $(CFLAGS) read.o dijkstra.o -o dijkstra
 
 compile_graph: read.o compile_graph.o
 	$(CXX) $(CFLAGS) read.o compile_graph.o -o compile_graph
+
+read_txt_graph: read.o read_txt_graph.o
+	$(CXX) $(CFLAGS) read.o read_txt_graph.o -o read_txt_graph
 
 clean:
 	rm -f *.o dijkstra compile_graph

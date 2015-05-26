@@ -39,7 +39,6 @@ trim(string& s)
 	return ltrim(rtrim(s));
 }
 
-static inline
 vector<string>
 split(const string& str, const string& sep)
 {
