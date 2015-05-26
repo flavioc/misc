@@ -22,7 +22,6 @@ benchmark_time ()
 
 benchmark_bp ()
 {
-   return 0
    name="belief-propagation"
    res50=$(benchmark_time ./main 50)
    echo "$name-50 c $res50"
@@ -36,7 +35,6 @@ benchmark_bp ()
 
 benchmark_ht ()
 {
-   return 0
    name="heat-transfer"
    res80=$(benchmark_time ./ht ht80.data $HT_DELTA)
    echo "$name-80 c $res80"
@@ -46,7 +44,6 @@ benchmark_ht ()
 
 benchmark_minimax ()
 {
-   return 0
    name="min-max-tictactoe"
    res=$(benchmark_time ./minimax)
    echo "$name c $res"
@@ -54,7 +51,6 @@ benchmark_minimax ()
 
 benchmark_nqueens ()
 {
-   return 0
    name="8queens"
    res11=$(benchmark_time ./nqueens 11)
    echo "$name-11 c $res11"
@@ -75,6 +71,8 @@ benchmark_sssp ()
    echo "$name-oclinks c $resoclinks"
    respowergrid=$(benchmark_time ./dijkstra uspowergrid.data 5)
    echo "$name-uspowergrid c $respowergrid"
+   resemail=$(benchmark_time ./dijkstra email.data 2500)
+   echo "$name-email c $resemail"
 }
 
 cd BeliefPropagation && benchmark_bp && cd .. &&

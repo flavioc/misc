@@ -33,17 +33,11 @@ struct node {
 	node_t id;
 	list<edge*> back_edges;
    struct node *current_target;
-   unordered_map<struct node*, distance_t> distances;
+   map<struct node*, distance_t> distances;
 	size_t position;
 	color_t color;
-   distance_t get_prio()
-   {
-      auto it(distances.find(current_target));
-      if(it == distances.end())
-         return INFINITE_DISTANCE;
-      else
-         return it->second;
-   }
+   distance_t current_distance;
+   distance_t get_prio() { return current_distance; }
 };
 
 static map<size_t, node*> nodes;
@@ -241,6 +235,7 @@ main(int argc, char **argv)
          assert(n);
          n->color = WHITE;
          n->current_target = d;
+         n->current_distance = INFINITE_DISTANCE;
       }
 
       node *target(nodes[dest]);
@@ -250,6 +245,7 @@ main(int argc, char **argv)
       assert(target != NULL);
 
       target->distances[d] = 0;
+      target->current_distance = 0;
       target->color = GRAY;
       insert_heap(target);
 
@@ -275,6 +271,7 @@ main(int argc, char **argv)
 
             if(new_d < vdis) {
                v->distances[d] = new_d;
+               v->current_distance = new_d;
                if(v->color == WHITE) {
                   v->color = GRAY;
                   insert_heap(v);
