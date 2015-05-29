@@ -75,8 +75,44 @@ benchmark_sssp ()
    echo "$name-email c $resemail"
 }
 
+benchmark_sssp_py ()
+{
+   name="shortest"
+   resairports=$(benchmark_time python ./dijkstra.py ../c++/usairports.data 1)
+   echo "$name-usairports500 python $resairports"
+   resoclinks=$(benchmark_time python ./dijkstra.py ../c++/oclinks.data 3)
+   echo "$name-oclinks python $resoclinks"
+   respowergrid=$(benchmark_time python ./dijkstra.py ../c++/uspowergrid.data 5)
+   echo "$name-uspowergrid python $respowergrid"
+   resemail=$(benchmark_time python ./dijkstra.py ../c++/email.data 2500)
+   echo "$name-email python $resemail"
+}
+
+benchmark_minimax_py ()
+{
+   name="min-max-tictactoe"
+   res=$(benchmark_time python ./minmax.py)
+   echo "$name python $res"
+}
+
+benchmark_nqueens_py ()
+{
+   name="8queens"
+   res11=$(benchmark_time python ./nqueens.py 11)
+   echo "$name-11 python $res11"
+   res12=$(benchmark_time python ./nqueens.py 12)
+   echo "$name-12 python $res12"
+   res13=$(benchmark_time python ./nqueens.py 13)
+   echo "$name-13 python $res13"
+   res14=$(benchmark_time python ./nqueens.py 14)
+   echo "$name-14 python $res14"
+}
+
 cd BeliefPropagation && benchmark_bp && cd .. &&
 cd HeatTransfer/c++ && benchmark_ht && cd ../.. &&
 cd MiniMax/c++ && benchmark_minimax && cd ../.. &&
 cd NQueens/c++ && benchmark_nqueens && cd ../.. &&
 cd SSSP/c++ && benchmark_sssp && cd ../..
+cd MiniMax/python && benchmark_minimax_py && cd ../..
+cd NQueens/python && benchmark_nqueens_py && cd ../..
+cd SSSP/python && benchmark_sssp_py && cd ../..
