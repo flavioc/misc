@@ -35,7 +35,7 @@ benchmark_bp ()
 
 benchmark_ht ()
 {
-   name="heat-transfer"
+   name="new-heat-transfer"
    res80=$(benchmark_time ./ht ht80.data $HT_DELTA)
    echo "$name-80 c $res80"
    res120=$(benchmark_time ./ht ht120.data $HT_DELTA)
