@@ -14,4 +14,4 @@ make clean all &&
 cd ../.. &&
 cd SSSP/c++ &&
 make clean all &&
-cd ../.. &&
+cd ../..

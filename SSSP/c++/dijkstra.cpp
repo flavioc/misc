@@ -11,6 +11,7 @@
 #include <unordered_map>
 
 #include "read.hpp"
+#include "../../mem.hpp"
 
 using namespace std;
 
@@ -193,9 +194,10 @@ main(int argc, char **argv)
 		cout << "usage: dijkstra <meld data file> <fraction>" << endl;
 		return EXIT_FAILURE;
 	}
+   initMemory();
 
    int fraction(atoi(argv[2]));
-   cout << "Using fraction " << fraction << endl;
+   //cout << "Using fraction " << fraction << endl;
    ifstream fp(argv[1], ifstream::in);
 
    int conn(0);
@@ -218,13 +220,16 @@ main(int argc, char **argv)
 		}
 	}
 #endif
+#if 0
    cout << "Added " << nodes.size() << " nodes\n";
    cout << "Added " << conn << " connections\n";
+#endif
 
    for(auto np : nodes) {
       size_t dest(np.first);
       if(dest % fraction != 0)
          continue;
+      readMemory();
 
       heap.clear();
       heap.reserve(0);
@@ -251,26 +256,20 @@ main(int argc, char **argv)
 
       while (!empty_heap()) {
          node *u(pop_heap());
+         u->distances[target] = u->current_distance;
 
          for(edge *e : u->back_edges) {
             node *v(e->target);
             size_t w(e->weight);
             auto ud(u->distances.find(d));
             size_t new_d;
-            if(ud == u->distances.end())
+            if(u->current_distance == INFINITE_DISTANCE)
                new_d = INFINITE_DISTANCE;
             else
-               new_d = ud->second + w;
-            auto vd(v->distances.find(d));
-            size_t vdis;
-            if(vd == v->distances.end()) {
-               vdis = INFINITE_DISTANCE;
-               v->distances[d] = vdis;
-            } else
-               vdis = vd->second;
+               new_d = u->current_distance + w;
+            size_t vdis(v->current_distance);
 
             if(new_d < vdis) {
-               v->distances[d] = new_d;
                v->current_distance = new_d;
                if(v->color == WHITE) {
                   v->color = GRAY;
@@ -296,6 +295,7 @@ main(int argc, char **argv)
       }
 	}
 #endif
+   printMemory();
 
 	return EXIT_SUCCESS;
 }
