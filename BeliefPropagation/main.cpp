@@ -10,6 +10,8 @@
 #include <set>
 #include <queue>
 
+#include "../mem.hpp"
+
 //#define USE_SPLASH 1
 //#define OUTPUT_DATA 1
 #define USE_STRUCTS 1
@@ -1066,6 +1068,8 @@ run_engine(void)
         fifo.pop_front();
         vdata->in_queue = false;
         update_count++;
+        if(update_count % 10 == 0)
+           readMemory();
         bp_update(*vdata);
     }
 }
@@ -1073,6 +1077,7 @@ run_engine(void)
 
 int main(int argc, char** argv)
 {
+   initMemory();
 #if 0
     size_heap h;
     
@@ -1097,19 +1102,25 @@ int main(int argc, char** argv)
     if(argc == 2) {
        GRID_SIZE = (size_t)atoi(argv[1]);
     }
+#ifndef MEASURE_MEM
     cout << "Create image " << GRID_SIZE << "x" << GRID_SIZE << "\n";
+#endif
     set_size(GRID_SIZE, GRID_SIZE);
     paint_sunset(5);
 #ifdef OUTPUT_IMAGES
     save_image("original.pgm");
 #endif
+#ifndef MEASURE_MEM
     cout << "Corrupt image.\n";
+#endif
     corrupt_image(sigma);
 #ifdef OUTPUT_IMAGES
     save_image("corrupted.pgm");
 #endif
     
+#ifndef MEASURE_MEM
     cout << "Construct graph.\n";
+#endif
     construct_graph();
     
     assert(colors > 0);
@@ -1124,13 +1135,20 @@ int main(int argc, char** argv)
     
 #ifndef OUTPUT_DATA
     start_engine();
+    readMemory();
     add_all_tasks_to_fifo(100.0);
+    readMemory();
     init_engine();
+    readMemory();
     
+#ifndef MEASURE_MEM
     cout << "Running engine.\n";
+#endif
     run_engine();
     
+#ifndef MEASURE_MEM
     cout << "Run everything with " << update_count << " updates" << endl;
+#endif
     
 #ifdef OUTPUT_IMAGES
     reconstruct_image();
@@ -1142,6 +1160,7 @@ int main(int argc, char** argv)
 #endif
 #endif
     delete_graph();
+    printMemory();
     
     return 0;
 }

@@ -3,11 +3,13 @@
 #include <list>
 #include <iostream>
 
+#include "../../mem.hpp"
+
 using namespace std;
 
 static int total(0);
 static bool DEBUG(false);
-static list< list<int>> valid = {{0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 4, 8}, {2, 4, 6}};
+static list< list<int>> *valid;
 
 typedef struct {
    int score;
@@ -38,7 +40,7 @@ allfilled(const vector<int> board, int player, int *points)
 static bool
 checkwin(const vector<int> board, int player)
 {
-   for(auto& v : valid) {
+   for(auto& v : *valid) {
       bool found(true);
       for(int i : v) {
          if(board[i] != player) {
@@ -55,6 +57,10 @@ checkwin(const vector<int> board, int player)
 static ret_value
 minimax(const vector<int> board, int player, int rootplayer, int tab = 0)
 {
+#ifdef MEASURE_MEM
+   if(player == rootplayer && tab % 2 == 0)
+      readMemory();
+#endif
    if(DEBUG) {
       for(size_t i(0); i < tab; ++i)
          cout << "\t";
@@ -166,11 +172,16 @@ minimax(const vector<int> board, int player, int rootplayer, int tab = 0)
 int
 main(int argc, char **argv)
 {
+   initMemory();
+   valid = new std::list< std::list<int> >({{0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 4, 8}, {2, 4, 6}});
    vector<int> board = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
    //vector<int> board = {0, 1, 0, 0, 0, 0, 0, 2, 1};
 //   vector<int> board = {2, 1, 2, 0, 1, 0, 0, 0, 2};
    ret_value r(minimax(board, 1, 1));
+#ifndef MEASURE_MEM
    cout << r.score << " " << r.play << endl;
    cout << "total " << total << endl;
+#endif
+   printMemory();
    return 0;
 }

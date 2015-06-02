@@ -4,6 +4,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <assert.h>
+#include <stdint.h>
+
+#include "../../mem.hpp"
 
 using std::cout;
 using std::cerr;
@@ -13,7 +16,7 @@ typedef struct {
    int x, y;
 } coord;
 
-static std::vector< std::vector<int> > solutions;
+static std::vector<std::vector<int> > *solutions;
 
 static bool
 can_place(const std::vector<int> cols, int row, int new_col, const size_t size)
@@ -45,12 +48,13 @@ static size_t
 do_queens(std::vector<int>& cols, int row, size_t size)
 {
    if(row == size) {
+      readMemory();
       std::vector<int> v;
       for(size_t i(0); i < cols.size(); ++i) {
          v.push_back(i);
          v.push_back(cols[i]);
       }
-      solutions.push_back(v);
+      solutions->push_back(v);
 #if 0
       cout << "Solution: ";
       for(size_t i(0); i < size; ++i) {
@@ -83,17 +87,24 @@ compute_queens(size_t size)
 int
 main(int argc, char **argv)
 {
+   initMemory();
    if(argc != 2) {
       cerr << "usage: nqueens <size>\n";
       return EXIT_FAILURE;
    }
 
+   solutions = new std::vector< std::vector<int> >();
    const size_t size(atoi(argv[1]));
 
+#ifndef MEASURE_MEM
    cout << "Using size " << size << endl;
+#endif
 
    compute_queens(size);
-   cout << "Found " << solutions.size() << " solutions" << endl;
+#ifndef MEASURE_MEM
+   cout << "Found " << solutions->size() << " solutions" << endl;
+#endif
+   printMemory();
 
    return EXIT_SUCCESS;
 }

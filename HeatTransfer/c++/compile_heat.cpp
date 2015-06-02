@@ -10,6 +10,7 @@
 #include <stdint.h>
 
 #include "read.hpp"
+#include "../../mem.hpp"
 
 using namespace std;
 

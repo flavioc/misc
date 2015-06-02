@@ -11,13 +11,15 @@ export TIMEFORMAT="%3R"
 benchmark_time ()
 {
    run="$*"
-   echo "==================" >> $LOGFILE
-   echo "* Timing $run" >> $LOGFILE
-   echo "==================" >> $LOGFILE
-   
-   mytime=$( { time $run >> $LOGFILE; } 2>&1)
-   mili=$(echo "$mytime 1000" | awk '{print $1 * $2}')
-   echo $mili
+   if [ -z "$MEMORY" ]; then
+      echo "* Timing $run" >> $LOGFILE
+      
+      mytime=$( { time $run >> $LOGFILE; } 2>&1)
+      mili=$(echo "$mytime 1000" | awk '{print $1 * $2}')
+      echo $mili
+  else
+     echo $($run)
+  fi
 }
 
 benchmark_bp ()
@@ -112,7 +114,8 @@ cd BeliefPropagation && benchmark_bp && cd .. &&
 cd HeatTransfer/c++ && benchmark_ht && cd ../.. &&
 cd MiniMax/c++ && benchmark_minimax && cd ../.. &&
 cd NQueens/c++ && benchmark_nqueens && cd ../.. &&
-cd SSSP/c++ && benchmark_sssp && cd ../..
-cd MiniMax/python && benchmark_minimax_py && cd ../..
-cd NQueens/python && benchmark_nqueens_py && cd ../..
-cd SSSP/python && benchmark_sssp_py && cd ../..
+cd SSSP/c++ && benchmark_sssp && cd ../.. &&
+cd MiniMax/python && benchmark_minimax_py && cd ../.. &&
+cd NQueens/python && benchmark_nqueens_py && cd ../.. &&
+cd SSSP/python && benchmark_sssp_py && cd ../.. &&
+exit 0

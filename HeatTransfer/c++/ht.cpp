@@ -10,6 +10,8 @@
 #include <stdint.h>
 #include <math.h>
 
+#include "../../mem.hpp"
+
 using namespace std;
 
 class node {
@@ -53,26 +55,31 @@ process_nodes()
          cont |= update_heat(n);
          updates++;
       }
+      readMemory();
    }
+#ifndef MEASURE_MEM
    cout << updates << " updates\n";
+#endif
 }
 
 int
 main(int argc, char **argv)
 {
+   initMemory();
 	if(argc != 3) {
 		cout << "usage: ht <meld data file> <delta>" << endl;
 		return EXIT_FAILURE;
 	}
 
    delta = atof(argv[2]);
+#ifndef MEASURE_MEM
    cout << "Using delta " << delta << endl;
    cout << "Reading file " << argv[1] << endl;
+#endif
    ifstream fp(argv[1], ifstream::in);
 
    uint32_t nnodes;
    fp.read((char *)&nnodes, sizeof(uint32_t));
-   cout << "To read " << nnodes << endl;
    for(size_t x(0); x < nnodes; ++x) {
       uint32_t node, total, dst;
       double heat;
@@ -88,7 +95,9 @@ main(int argc, char **argv)
       }
       nodes[node] = n;
    }
+#ifndef MEASURE_MEM
    cout << "Read " << nodes.size() << " nodes\n";
+#endif
 
    // fix nodes
    for(auto p : nodes) {
@@ -101,4 +110,5 @@ main(int argc, char **argv)
    }
 
    process_nodes();
+   printMemory();
 }
