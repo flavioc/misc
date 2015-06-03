@@ -2,3 +2,13 @@ minimax
 nqueens
 *.pyc
 *.data
+*.o
+log
+out
+*.txt
+main
+compile_graph
+read_txt_graph
+compile_heat
+ht
+dijkstra
