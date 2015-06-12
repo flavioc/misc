@@ -174,14 +174,20 @@ main(int argc, char **argv)
 {
    initMemory();
    valid = new std::list< std::list<int> >({{0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 4, 8}, {2, 4, 6}});
-   vector<int> board = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-   //vector<int> board = {0, 1, 0, 0, 0, 0, 0, 2, 1};
-//   vector<int> board = {2, 1, 2, 0, 1, 0, 0, 0, 2};
-   ret_value r(minimax(board, 1, 1));
+   vector<int> *board{nullptr};
+
+   if(argc == 1 || (argc > 1 && !strcmp(argv[1], "normal")))
+      board = new vector<int>({0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+   else if(argc == 2 && !strcmp(argv[1], "big"))
+      board = new vector<int>({2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+   if(!board)
+      abort();
+   ret_value r(minimax(*board, 1, 1));
 #ifndef MEASURE_MEM
    cout << r.score << " " << r.play << endl;
    cout << "total " << total << endl;
 #endif
    printMemory();
+   delete board;
    return 0;
 }
