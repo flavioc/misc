@@ -41,7 +41,7 @@ static uint64_t avg_memory = 0;
 static uint64_t mem_count = 0;
 #endif
 
-static void
+static inline void
 initMemory()
 {
 #ifdef MEASURE_MEM
@@ -49,7 +49,7 @@ initMemory()
 #endif
 }
 
-static void
+static inline void
 readMemory()
 {
 #ifdef MEASURE_MEM
@@ -64,7 +64,7 @@ readMemory()
 #endif
 }
 
-static void
+static inline void
 printMemory()
 {
 #ifdef MEASURE_MEM

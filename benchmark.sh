@@ -47,8 +47,10 @@ benchmark_ht ()
 benchmark_minimax ()
 {
    name="min-max-tictactoe"
-   res=$(benchmark_time ./minimax)
-   echo "$name c $res"
+   resnormal=$(benchmark_time ./minimax normal)
+   echo "$name c $resnormal"
+   resbig=$(benchmark_time ./minimax big)
+   echo "$name-big c $resbig"
 }
 
 benchmark_nqueens ()
@@ -69,22 +71,26 @@ benchmark_sssp ()
    name="shortest"
    resairports=$(benchmark_time ./dijkstra usairports.data 1)
    echo "$name-usairports500 c $resairports"
-   resoclinks=$(benchmark_time ./dijkstra oclinks.data 3)
+   resoclinks=$(benchmark_time ./dijkstra oclinks.data 1)
    echo "$name-oclinks c $resoclinks"
-   respowergrid=$(benchmark_time ./dijkstra uspowergrid.data 5)
+   respowergrid=$(benchmark_time ./dijkstra uspowergrid.data 1)
    echo "$name-uspowergrid c $respowergrid"
    resemail=$(benchmark_time ./dijkstra email.data 2500)
    echo "$name-email c $resemail"
+   restwitter=$(benchmark_time ./dijkstra twitter.data 2000)
+   echo "$name-twitter c $restwitter"
 }
 
 benchmark_sssp_py ()
 {
    name="shortest"
+   restwitter=$(benchmark_time python ./dijkstra.py ../c++/twitter.data 2000)
+   echo "$name-twitter python $restwitter"
    resairports=$(benchmark_time python ./dijkstra.py ../c++/usairports.data 1)
    echo "$name-usairports500 python $resairports"
-   resoclinks=$(benchmark_time python ./dijkstra.py ../c++/oclinks.data 3)
+   resoclinks=$(benchmark_time python ./dijkstra.py ../c++/oclinks.data 1)
    echo "$name-oclinks python $resoclinks"
-   respowergrid=$(benchmark_time python ./dijkstra.py ../c++/uspowergrid.data 5)
+   respowergrid=$(benchmark_time python ./dijkstra.py ../c++/uspowergrid.data 1)
    echo "$name-uspowergrid python $respowergrid"
    resemail=$(benchmark_time python ./dijkstra.py ../c++/email.data 2500)
    echo "$name-email python $resemail"

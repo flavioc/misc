@@ -23,9 +23,11 @@ COMPILE = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJS)
 OBJS = read.o \
 		 dijkstra.o	\
 		 compile_graph.o \
-		 read_txt_graph.o
+		 read_txt_graph.o \
+		 to_ligra.o \
+		 meld_to_txt.o
 
-all: compile_graph dijkstra read_txt_graph
+all: compile_graph dijkstra read_txt_graph to_ligra meld_to_txt
 
 dijkstra: read.o dijkstra.o
 	$(CXX) $(CFLAGS) read.o dijkstra.o -o dijkstra
@@ -36,5 +38,11 @@ compile_graph: read.o compile_graph.o
 read_txt_graph: read.o read_txt_graph.o
 	$(CXX) $(CFLAGS) read.o read_txt_graph.o -o read_txt_graph
 
+meld_to_txt: read.o meld_to_txt.o
+	$(CXX) $(CFLAGS) read.o meld_to_txt.o -o meld_to_txt
+
+to_ligra: read.o to_ligra.o
+	$(CXX) $(CFLAGS) read.o to_ligra.o -o to_ligra
+
 clean:
-	rm -f *.o dijkstra compile_graph
+	rm -f *.o dijkstra compile_graph read_txt_graph to_ligra

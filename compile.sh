@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -z "$BOOST_PREFIX" ]; then
+   echo "BOOST_PREFIX not set!"
+fi
+
 cd BeliefPropagation &&
 INCLUDES=-I$BOOST_PREFIX/include make clean all &&
 cd .. &&

@@ -26,7 +26,7 @@ int
 main(int argc, char **argv)
 {
 	if(argc != 3) {
-		cout << "usage: read_txt_graph <meld data file> <output file>" << endl;
+		cout << "usage: read_txt_graph <.txt data file> <.data output file>" << endl;
 		return EXIT_FAILURE;
 	}
 
@@ -41,7 +41,6 @@ main(int argc, char **argv)
          uint32_t src(atoi(vec[0].c_str()));
          uint32_t dst(atoi(vec[1].c_str()));
          uint32_t weight(atoi(vec[2].c_str()));
-         cout << src << " " << dst << " -> " << weight << endl;
          add_edge(fp, src, dst, weight);
       }
    }
