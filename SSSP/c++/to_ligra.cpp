@@ -9,6 +9,7 @@
 #include <fstream>
 #include <stdint.h>
 #include <map>
+#include <unordered_map>
 
 #include "read.hpp"
 #include "../../mem.hpp"
@@ -27,7 +28,7 @@ main(int argc, char **argv)
    ofstream out(argv[2], ifstream::out);
    typedef std::pair<uint32_t, uint32_t> edge_pair;
    typedef std::vector<edge_pair> edge_vector;
-   map<uint32_t, edge_vector> m;
+   unordered_map<uint32_t, edge_vector> m;
    uint32_t edge_count{0};
 
    out << "WeightedAdjacencyGraph\n";
@@ -59,17 +60,34 @@ main(int argc, char **argv)
    out << m.size() << "\n";
    out << edge_count << "\n";
    uint32_t offset{0};
+   size_t count{0};
+#define INTERVAL 50000
    for(auto p : m) {
       out << offset << "\n";
       offset += p.second.size();
+      count++;
+      if(count % INTERVAL == 0) {
+         count = 0;
+         out.flush();
+      }
    }
    for(auto p : m) {
       for(auto edge : p.second)
          out << edge.first << "\n";
+      count++;
+      if(count % INTERVAL == 0) {
+         count = 0;
+         out.flush();
+      }
    }
    for(auto p : m) {
       for(auto edge : p.second)
          out << edge.second << "\n";
+      count++;
+      if(count % INTERVAL == 0) {
+         count = 0;
+         out.flush();
+      }
    }
 	return EXIT_SUCCESS;
 }

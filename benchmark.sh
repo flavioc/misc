@@ -69,6 +69,10 @@ benchmark_nqueens ()
 benchmark_sssp ()
 {
    name="shortest"
+   reslivejournal=$(benchmark_time ./dijkstra livejournal.data 4000000)
+   echo "$name-livejournal c $reslivejournal"
+   resorkut=$(benchmark_time ./dijkstra orkut.data 3000000)
+   echo "$name-orkut c $resorkut"
    resairports=$(benchmark_time ./dijkstra usairports.data 1)
    echo "$name-usairports500 c $resairports"
    resoclinks=$(benchmark_time ./dijkstra oclinks.data 1)
@@ -84,6 +88,11 @@ benchmark_sssp ()
 benchmark_sssp_py ()
 {
    name="shortest"
+   reslivejournal=$(benchmark_time python ./dijkstra.py ../c++/livejournal.data 4000000)
+   echo "$name-livejournal python $reslivejournal"
+   return
+   resorkut=$(benchmark_time python ./dijkstra.py ../c++/orkut.data 3000000)
+   echo "$name-orkut python $resorkut"
    restwitter=$(benchmark_time python ./dijkstra.py ../c++/twitter.data 2000)
    echo "$name-twitter python $restwitter"
    resairports=$(benchmark_time python ./dijkstra.py ../c++/usairports.data 1)
@@ -116,11 +125,11 @@ benchmark_nqueens_py ()
    echo "$name-14 python $res14"
 }
 
+cd MiniMax/c++ && benchmark_minimax && cd ../.. &&
+cd SSSP/c++ && benchmark_sssp && cd ../.. &&
 cd BeliefPropagation && benchmark_bp && cd .. &&
 cd HeatTransfer/c++ && benchmark_ht && cd ../.. &&
-cd MiniMax/c++ && benchmark_minimax && cd ../.. &&
 cd NQueens/c++ && benchmark_nqueens && cd ../.. &&
-cd SSSP/c++ && benchmark_sssp && cd ../.. &&
 cd MiniMax/python && benchmark_minimax_py && cd ../.. &&
 cd NQueens/python && benchmark_nqueens_py && cd ../.. &&
 cd SSSP/python && benchmark_sssp_py && cd ../.. &&

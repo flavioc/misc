@@ -70,7 +70,7 @@ printMemory()
 #ifdef MEASURE_MEM
    if(!avg_memory)
       avg_memory = 1;
-   std::cout << avg_memory << std::endl;
+   std::cout << avg_memory << " " << (getMemUsage() - start_mem) << std::endl;
 #endif
 }
 
